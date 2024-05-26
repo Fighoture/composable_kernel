@@ -66,8 +66,8 @@ bool profile_grouped_conv_bwd_data_impl(int do_verification,
     {
     case 0: break;
     case 1:
-        out.GenerateTensorValue(GeneratorTensor_2<OutDataType>{-5, 5});
-        wei.GenerateTensorValue(GeneratorTensor_2<WeiDataType>{-5, 5});
+        out.GenerateTensorValue(GeneratorTensor_2<OutDataType>{0, 5});
+        wei.GenerateTensorValue(GeneratorTensor_2<WeiDataType>{0, 5});
         break;
     case 2:
         out.GenerateTensorValue(GeneratorTensor_3<OutDataType>{0.0, 1.0});

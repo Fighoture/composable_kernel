@@ -72,9 +72,9 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 {
     ComputePtrOffsetOfStridedBatch() = default;
 
-    ComputePtrOffsetOfStridedBatch(Array<ck::index_t, NumATensor>& BatchStrideAs,
-                                   Array<ck::index_t, NumBTensor>& BatchStrideBs,
-                                   Array<ck::index_t, NumDTensor>& BatchStrideDs,
+    ComputePtrOffsetOfStridedBatch(std::array<ck::index_t, NumATensor>& BatchStrideAs,
+                                   std::array<ck::index_t, NumBTensor>& BatchStrideBs,
+                                   std::array<ck::index_t, NumDTensor>& BatchStrideDs,
                                    index_t BatchStrideE)
         : BatchStrideA_(BatchStrideAs),
           BatchStrideB_(BatchStrideBs),
@@ -85,7 +85,7 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 
     __host__ __device__ constexpr auto GetAsPtrOffset(index_t g_idx) const
     {
-        Array<long_index_t, NumATensor> as_offset;
+        std::array<long_index_t, NumATensor> as_offset;
         static_for<0, NumATensor, 1>{}(
             [&](auto i) { as_offset(i) = g_idx * static_cast<long_index_t>(BatchStrideA_[i]); });
         return as_offset;
@@ -93,7 +93,7 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 
     __host__ __device__ constexpr auto GetBsPtrOffset(index_t g_idx) const
     {
-        Array<long_index_t, NumBTensor> bs_offset;
+        std::array<long_index_t, NumBTensor> bs_offset;
         static_for<0, NumBTensor, 1>{}(
             [&](auto i) { bs_offset(i) = g_idx * static_cast<long_index_t>(BatchStrideB_[i]); });
         return bs_offset;
@@ -101,7 +101,7 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 
     __host__ __device__ constexpr auto GetDsPtrOffset(index_t g_idx) const
     {
-        Array<long_index_t, NumDTensor> ds_offset;
+        std::array<long_index_t, NumDTensor> ds_offset;
         static_for<0, NumDTensor, 1>{}(
             [&](auto i) { ds_offset(i) = g_idx * static_cast<long_index_t>(BatchStrideDs_[i]); });
         return ds_offset;
@@ -118,9 +118,9 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
         return g_idx * static_cast<long_index_t>(BatchStrideE_);
     }
 
-    Array<ck::index_t, NumATensor> BatchStrideA_;
-    Array<ck::index_t, NumBTensor> BatchStrideB_;
-    Array<ck::index_t, NumDTensor> BatchStrideDs_;
+    std::array<ck::index_t, NumATensor> BatchStrideA_;
+    std::array<ck::index_t, NumBTensor> BatchStrideB_;
+    std::array<ck::index_t, NumDTensor> BatchStrideDs_;
     index_t BatchStrideE_;
     index_t& BatchStrideC_ = BatchStrideE_; // alias for kernels without multiple D
 };
@@ -135,7 +135,7 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 
     ComputePtrOffsetOfStridedBatch(index_t BatchStrideA,
                                    index_t BatchStrideB,
-                                   Array<ck::index_t, NumDTensor> BatchStrideDs,
+                                   std::array<ck::index_t, NumDTensor> BatchStrideDs,
                                    index_t BatchStrideE)
         : BatchStrideA_(BatchStrideA),
           BatchStrideB_(BatchStrideB),
@@ -156,7 +156,7 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 
     __host__ __device__ constexpr auto GetDsPtrOffset(index_t g_idx) const
     {
-        Array<long_index_t, NumDTensor> ds_offset;
+        std::array<long_index_t, NumDTensor> ds_offset;
         static_for<0, NumDTensor, 1>{}(
             [&](auto i) { ds_offset(i) = g_idx * static_cast<long_index_t>(BatchStrideDs_[i]); });
         return ds_offset;
@@ -175,7 +175,7 @@ struct ComputePtrOffsetOfStridedBatch<NumATensor,
 
     ck::index_t BatchStrideA_;
     ck::index_t BatchStrideB_;
-    Array<ck::index_t, NumDTensor> BatchStrideDs_;
+    std::array<ck::index_t, NumDTensor> BatchStrideDs_;
     index_t BatchStrideE_;
     index_t& BatchStrideC_ = BatchStrideE_; // alias for kernels without multiple D
 };

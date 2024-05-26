@@ -199,9 +199,9 @@ struct GridwiseGemm_xdl_cshuffle_v3
 
     using ThisThreadBlock = ThisThreadBlock<BlockSize>;
 
-    __host__ static auto CalculateGridSize(index_t M, index_t N, index_t KBatch)
+    __host__ static auto CalculateGridSize(index_t M, index_t N, index_t KBatch, index_t Batch = 1)
     {
-        return std::make_tuple(Block2CTileMap::CalculateGridSize(M, N), 1, KBatch);
+        return std::make_tuple(Block2CTileMap::CalculateGridSize(M, N), Batch, KBatch);
     }
 
     __host__ static auto CalculateMPadded(index_t M)
@@ -1288,7 +1288,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
     }
 
     template <typename CGridDesc>
-    __device__ static constexpr auto MakeCGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
+    __host__ __device__ static constexpr auto MakeCGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
         const CGridDesc& c_grid_desc_m_n, index_t MBlock, index_t NBlock)
     {
         const auto c_grid_desc_mblock_mperblock_nblock_nperblock = transform_tensor_descriptor(
@@ -1302,7 +1302,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
     }
 
     template <typename DsGridDesc>
-    __device__ static constexpr auto MakeDsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
+    __host__ __device__ static constexpr auto MakeDsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
         const DsGridDesc& ds_grid_desc_m_n, index_t MBlock, index_t NBlock)
     {
         return generate_tuple(
@@ -1320,7 +1320,12 @@ struct GridwiseGemm_xdl_cshuffle_v3
     using Block2CTileMap = BlockToCTileMap_Grouped_M00_N0_M01Adapt<8, MPerBlock, NPerBlock>;
     // using Block2CTileMap = BlockToCTileMap_3DGrid_KSplit<MPerBlock, NPerBlock>;
 
-    template <bool HasMainKBlockLoop,
+    template <
+    typename AsGridDescriptor_AK0_M_AK1,
+    typename BsGridDescriptor_BK0_N_BK1,
+    typename DsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock,
+    typename CGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock,
+    bool HasMainKBlockLoop,
               InMemoryDataOperationEnum CGlobalMemoryDataOperation,
               TailNumber TailNum = TailNumber::Odd>
     __device__ static void Run(AsGridPointer& p_as_grid,
@@ -1329,6 +1334,10 @@ struct GridwiseGemm_xdl_cshuffle_v3
                                CDataType* p_c_grid,
                                void* p_shared,
                                const Problem& problem,
+                               const AsGridDescriptor_AK0_M_AK1&as_grid_desc_ak0_m_ak1,
+                                const BsGridDescriptor_BK0_N_BK1&bs_grid_desc_bk0_n_bk1,
+                                const DsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock&ds_grid_desc_mblock_mperblock_nblock_nperblock,
+                                const CGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock &c_grid_desc_mblock_mperblock_nblock_nperblock,
                                const AElementwiseOperation& a_element_op,
                                const BElementwiseOperation& b_element_op,
                                const CElementwiseOperation& c_element_op)
@@ -1344,30 +1353,6 @@ struct GridwiseGemm_xdl_cshuffle_v3
         //    problem.M, problem.MPadded, problem.K, problem.KPadded, problem.StrideA, problem.AK0);
         // const auto b_grid_desc_bk0_n_bk1 = MakeBGridDescriptor_BK0_N_BK1(
         //    problem.K, problem.KPadded, problem.N, problem.NPadded, problem.StrideB, problem.BK0);
-        const auto as_grid_desc_ak0_m_ak1 = MakeAsGridDescriptor_AK0_M_AK1(
-            problem.M, problem.MPadded, problem.K, problem.KPadded, problem.StrideAs, problem.AK0);
-        const auto bs_grid_desc_bk0_n_bk1 = MakeBsGridDescriptor_BK0_N_BK1(
-            problem.K, problem.KPadded, problem.N, problem.NPadded, problem.StrideBs, problem.BK0);
-        const auto c_grid_desc_m_n = MakeCGridDescriptor_M_N(
-            problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideC);
-
-        const auto c_grid_desc_mblock_mperblock_nblock_nperblock =
-            MakeCGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
-                c_grid_desc_m_n, problem.MBlock, problem.NBlock);
-
-        const auto ds_grid_desc_m_n = MakeDsGridDescriptor_M_N(
-            problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideDs);
-
-#if 0
-        static_for<0, NumDTensor, 1>{}([&](auto j) {
-            ds_grid_desc_m_n(j) = MakeCGridDescriptor_M_N(
-                problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideDs[j]);
-        });
-#endif
-
-        const auto ds_grid_desc_mblock_mperblock_nblock_nperblock =
-            MakeDsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
-                ds_grid_desc_m_n, problem.MBlock, problem.NBlock);
 
         // const auto a_grid_buf = make_dynamic_buffer<AddressSpaceEnum::Global>(
         //    p_a_grid, a_grid_desc_ak0_m_ak1.GetElementSpaceSize());
@@ -1394,7 +1379,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
         const auto ds_grid_buf = generate_tuple(
             [&](auto i) {
                 return make_dynamic_buffer<AddressSpaceEnum::Global>(
-                    p_ds_grid[i], ds_grid_desc_m_n[i].GetElementSpaceSize());
+                    p_ds_grid[i], ds_grid_desc_mblock_mperblock_nblock_nperblock[i].GetElementSpaceSize());
             },
             Number<NumDTensor>{});
 
@@ -1402,7 +1387,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
         const auto block_2_ctile_map = Block2CTileMap{problem.M, problem.N, 4};
 
         const auto block_work_idx =
-            block_2_ctile_map.CalculateBottomIndex(make_multi_index(get_block_1d_id()));
+            block_2_ctile_map.CalculateBottomIndex(make_multi_index(static_cast<index_t>(blockIdx.x)));
 
         if(!block_2_ctile_map.ValidCTileIndex(
                block_work_idx,
@@ -1471,7 +1456,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
             ThisThreadBlock,
             AsDataType,
             Tuple<LDSTypeA>,
-            decltype(as_grid_desc_ak0_m_ak1),
+            AsGridDescriptor_AK0_M_AK1,
             decltype(tie(a_block_desc_ak0_m_ak1)),
             AElementwiseOperation,
             Sequence<static_cast<index_t>(InMemoryDataOperationEnum::Set)>,
@@ -1533,7 +1518,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
             ThisThreadBlock,
             BsDataType,
             Tuple<LDSTypeB>,
-            decltype(bs_grid_desc_bk0_n_bk1),
+            BsGridDescriptor_BK0_N_BK1,
             decltype(tie(b_block_desc_bk0_n_bk1)),
             BElementwiseOperation,
             Sequence<static_cast<index_t>(InMemoryDataOperationEnum::Set)>,
@@ -1906,25 +1891,20 @@ struct GridwiseGemm_xdl_cshuffle_v3
         }
     }
 
-#if 1
-    template <bool HasMainKBlockLoop,
+    template <
+    bool HasMainKBlockLoop,
               InMemoryDataOperationEnum CGlobalMemoryDataOperation,
               TailNumber TailNum = TailNumber::Odd>
-    __device__ static void Run_2Lds(AsGridPointer& p_as_grid,
-                                    BsGridPointer& p_bs_grid,
-                                    DsGridPointer& p_ds_grid,
-                                    CDataType* p_c_grid,
-                                    void* p_shared_0,
-                                    void* p_shared_1,
-                                    const Problem& problem,
-                                    const AElementwiseOperation& a_element_op,
-                                    const BElementwiseOperation& b_element_op,
-                                    const CElementwiseOperation& c_element_op)
+    __device__ static void Run(AsGridPointer& p_as_grid,
+                               BsGridPointer& p_bs_grid,
+                               DsGridPointer& p_ds_grid,
+                               CDataType* p_c_grid,
+                               void* p_shared,
+                               const Problem& problem,
+                               const AElementwiseOperation& a_element_op,
+                               const BElementwiseOperation& b_element_op,
+                               const CElementwiseOperation& c_element_op)
     {
-        // const auto a_grid_desc_ak0_m_ak1 = MakeAGridDescriptor_AK0_M_AK1(
-        //    problem.M, problem.MPadded, problem.K, problem.KPadded, problem.StrideA, problem.AK0);
-        // const auto b_grid_desc_bk0_n_bk1 = MakeBGridDescriptor_BK0_N_BK1(
-        //    problem.K, problem.KPadded, problem.N, problem.NPadded, problem.StrideB, problem.BK0);
         const auto as_grid_desc_ak0_m_ak1 = MakeAsGridDescriptor_AK0_M_AK1(
             problem.M, problem.MPadded, problem.K, problem.KPadded, problem.StrideAs, problem.AK0);
         const auto bs_grid_desc_bk0_n_bk1 = MakeBsGridDescriptor_BK0_N_BK1(
@@ -1939,9 +1919,63 @@ struct GridwiseGemm_xdl_cshuffle_v3
         const auto ds_grid_desc_m_n = MakeDsGridDescriptor_M_N(
             problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideDs);
 
+#if 0
+        static_for<0, NumDTensor, 1>{}([&](auto j) {
+            ds_grid_desc_m_n(j) = MakeCGridDescriptor_M_N(
+                problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideDs[j]);
+        });
+#endif
+
         const auto ds_grid_desc_mblock_mperblock_nblock_nperblock =
             MakeDsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
                 ds_grid_desc_m_n, problem.MBlock, problem.NBlock);
+
+        Run<decltype(as_grid_desc_ak0_m_ak1),
+     decltype(bs_grid_desc_bk0_n_bk1),
+    decltype(c_grid_desc_mblock_mperblock_nblock_nperblock),
+    decltype(ds_grid_desc_mblock_mperblock_nblock_nperblock), HasMainKBlockLoop, CGlobalMemoryDataOperation, TailNum>(p_as_grid,
+                    p_bs_grid,
+                    p_ds_grid,
+                    p_c_grid,
+                    p_shared,
+                    problem, 
+                    as_grid_desc_ak0_m_ak1,
+                    bs_grid_desc_bk0_n_bk1,
+                    ds_grid_desc_mblock_mperblock_nblock_nperblock,
+                    c_grid_desc_mblock_mperblock_nblock_nperblock,
+                    a_element_op,
+                    b_element_op,
+                    c_element_op);
+    }
+
+#if 1
+    template <
+    typename AsGridDescriptor_AK0_M_AK1,
+    typename BsGridDescriptor_BK0_N_BK1,
+    typename DsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock,
+    typename CGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock,
+    bool HasMainKBlockLoop,
+              InMemoryDataOperationEnum CGlobalMemoryDataOperation,
+              TailNumber TailNum = TailNumber::Odd>
+    __device__ static void Run_2Lds(AsGridPointer& p_as_grid,
+                                    BsGridPointer& p_bs_grid,
+                                    DsGridPointer& p_ds_grid,
+                                    CDataType* p_c_grid,
+                                    void* p_shared_0,
+                                    void* p_shared_1,
+                                    const Problem& problem,
+                               const AsGridDescriptor_AK0_M_AK1&as_grid_desc_ak0_m_ak1,
+                                const BsGridDescriptor_BK0_N_BK1&bs_grid_desc_bk0_n_bk1,
+                                const DsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock&ds_grid_desc_mblock_mperblock_nblock_nperblock,
+                                const CGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock &c_grid_desc_mblock_mperblock_nblock_nperblock,
+                                    const AElementwiseOperation& a_element_op,
+                                    const BElementwiseOperation& b_element_op,
+                                    const CElementwiseOperation& c_element_op)
+    {
+        // const auto a_grid_desc_ak0_m_ak1 = MakeAGridDescriptor_AK0_M_AK1(
+        //    problem.M, problem.MPadded, problem.K, problem.KPadded, problem.StrideA, problem.AK0);
+        // const auto b_grid_desc_bk0_n_bk1 = MakeBGridDescriptor_BK0_N_BK1(
+        //    problem.K, problem.KPadded, problem.N, problem.NPadded, problem.StrideB, problem.BK0);
 
         // const auto a_grid_buf = make_dynamic_buffer<AddressSpaceEnum::Global>(
         //    p_a_grid, a_grid_desc_ak0_m_ak1.GetElementSpaceSize());
@@ -1967,7 +2001,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
         const auto ds_grid_buf = generate_tuple(
             [&](auto i) {
                 return make_dynamic_buffer<AddressSpaceEnum::Global>(
-                    p_ds_grid[i], ds_grid_desc_m_n[i].GetElementSpaceSize());
+                    p_ds_grid[i], ds_grid_desc_mblock_mperblock_nblock_nperblock[i].GetElementSpaceSize());
             },
             Number<NumDTensor>{});
 
@@ -1975,7 +2009,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
         const auto block_2_ctile_map = Block2CTileMap{problem.M, problem.N, 4};
 
         const auto block_work_idx =
-            block_2_ctile_map.CalculateBottomIndex(make_multi_index(get_block_1d_id()));
+            block_2_ctile_map.CalculateBottomIndex(make_multi_index(static_cast<index_t>(blockIdx.x)));
 
         if(!block_2_ctile_map.ValidCTileIndex(
                block_work_idx,
@@ -2044,7 +2078,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
             ThisThreadBlock,
             AsDataType,
             Tuple<LDSTypeA>,
-            decltype(as_grid_desc_ak0_m_ak1),
+            AsGridDescriptor_AK0_M_AK1,
             decltype(tie(a_block_desc_ak0_m_ak1)),
             AElementwiseOperation,
             Sequence<static_cast<index_t>(InMemoryDataOperationEnum::Set)>,
@@ -2107,7 +2141,7 @@ struct GridwiseGemm_xdl_cshuffle_v3
             ThisThreadBlock,
             BsDataType,
             Tuple<LDSTypeB>,
-            decltype(bs_grid_desc_bk0_n_bk1),
+            BsGridDescriptor_BK0_N_BK1,
             decltype(tie(b_block_desc_bk0_n_bk1)),
             BElementwiseOperation,
             Sequence<static_cast<index_t>(InMemoryDataOperationEnum::Set)>,
@@ -2486,6 +2520,57 @@ struct GridwiseGemm_xdl_cshuffle_v3
         }
     }
 #endif
+
+    template <
+    bool HasMainKBlockLoop,
+              InMemoryDataOperationEnum CGlobalMemoryDataOperation,
+              TailNumber TailNum = TailNumber::Odd>
+    __device__ static void Run_2Lds(AsGridPointer& p_as_grid,
+                               BsGridPointer& p_bs_grid,
+                               DsGridPointer& p_ds_grid,
+                               CDataType* p_c_grid,
+                               void* p_shared,
+                               const Problem& problem,
+                               const AElementwiseOperation& a_element_op,
+                               const BElementwiseOperation& b_element_op,
+                               const CElementwiseOperation& c_element_op)
+    {
+        const auto as_grid_desc_ak0_m_ak1 = MakeAsGridDescriptor_AK0_M_AK1(
+            problem.M, problem.MPadded, problem.K, problem.KPadded, problem.StrideAs, problem.AK0);
+        const auto bs_grid_desc_bk0_n_bk1 = MakeBsGridDescriptor_BK0_N_BK1(
+            problem.K, problem.KPadded, problem.N, problem.NPadded, problem.StrideBs, problem.BK0);
+        const auto c_grid_desc_m_n = MakeCGridDescriptor_M_N(
+            problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideC);
+
+        const auto c_grid_desc_mblock_mperblock_nblock_nperblock =
+            MakeCGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
+                c_grid_desc_m_n, problem.MBlock, problem.NBlock);
+
+        const auto ds_grid_desc_m_n = MakeDsGridDescriptor_M_N(
+            problem.M, problem.MPadded, problem.N, problem.NPadded, problem.StrideDs);
+
+        const auto ds_grid_desc_mblock_mperblock_nblock_nperblock =
+            MakeDsGridDescriptor_MBlock_MPerBlock_NBlock_NPerBlock(
+                ds_grid_desc_m_n, problem.MBlock, problem.NBlock);
+
+        Run_2Lds<decltype(as_grid_desc_ak0_m_ak1),
+     decltype(bs_grid_desc_bk0_n_bk1),
+    decltype(c_grid_desc_mblock_mperblock_nblock_nperblock),
+    decltype(ds_grid_desc_mblock_mperblock_nblock_nperblock), HasMainKBlockLoop, CGlobalMemoryDataOperation, TailNum>(p_as_grid,
+                    p_bs_grid,
+                    p_ds_grid,
+                    p_c_grid,
+                    p_shared,
+                    problem, 
+                    as_grid_desc_ak0_m_ak1,
+                    bs_grid_desc_bk0_n_bk1,
+                    ds_grid_desc_mblock_mperblock_nblock_nperblock,
+                    c_grid_desc_mblock_mperblock_nblock_nperblock,
+                    a_element_op,
+                    b_element_op,
+                    c_element_op);
+    }
+
 };
 
 } // namespace ck

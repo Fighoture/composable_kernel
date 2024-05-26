@@ -1,0 +1,263 @@
+Running main() from /root/workspace/ck3/build/_deps/gtest-src/googletest/src/gtest_main.cc
+[==========] Running 2 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from TestGroupedConvndBwdData2d/0, where TypeParam = std::tuple<float,ck::tensor_layout::convolution::NHWGK,ck::tensor_layout::convolution::GKYXC,ck::tensor_layout::convolution::NHWGC>
+[ RUN      ] TestGroupedConvndBwdData2d/0.Test2D
+out: dim 5, lengths {1, 4, 192, 28, 28}, strides {192, 150528, 1, 5376, 192}
+wei: dim 5, lengths {1, 192, 192, 3, 3}, strides {331776, 1728, 1, 576, 192}
+in: dim 5, lengths {1, 4, 192, 28, 28}, strides {192, 150528, 1, 5376, 192}
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 32, 32, 8, 4, Default, 32, 32, 2, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 16, 32, 8, 4, Default, 16, 16, 4, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 32, 32, 8, 4, Default, 32, 32, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 16, 32, 8, 4, Default, 16, 16, 2, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 64, 32, 8, 4, Default, 16, 16, 1, 2, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 64, 32, 8, 4, Default, 32, 32, 1, 1, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 128, 32, 8, 4, Default, 16, 16, 1, 4, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 128, 32, 8, 4, Default, 32, 32, 1, 2, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 32, 32, 8, 4, Default, 32, 32, 2, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 16, 32, 8, 4, Default, 16, 16, 4, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 32, 32, 8, 4, Default, 32, 32, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 16, 32, 8, 4, Default, 16, 16, 2, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 2, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3139 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3065 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 682, number of errors: 600425, 99.71983% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Default, 16, 16, 1, 1, 8, 4, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 3139 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3049 != 2994
+max err: 878, number of errors: 600681, 99.76234% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 64, 32, 8, 4, Default, 16, 16, 1, 2, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 64, 32, 8, 4, Default, 32, 32, 1, 1, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 128, 32, 8, 4, Default, 16, 16, 1, 4, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+Perf:          0 ms, inf TFlops, inf GB/s, DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 128, 32, 8, 4, Default, 32, 32, 1, 2, 8, 8, 1, 1>
+Error: Incorrect results!        out[0] != ref[0]: 2995 != 3153
+Error: Incorrect results!        out[1] != ref[1]: 3065 != 3091
+Error: Incorrect results!        out[2] != ref[2]: 2826 != 3120
+Error: Incorrect results!        out[3] != ref[3]: 3118 != 2994
+max err: 878, number of errors: 600867, 99.79323% wrong values
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 32, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 2, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 4, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 32, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 2, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 64, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 2, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 64, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 1, 1, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 128, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 4, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 128, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 1, 2, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 32, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 2, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 128, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 4, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 32, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 64, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 2, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 2, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<64, 16, 16, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 32, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 1, 8, 4, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 64, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 2, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 64, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 1, 1, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 16, 128, 32, 8, 4, Filter1x1Stride1Pad0, 16, 16, 1, 4, 8, 8, 1, 1> does not support this problem
+DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 128, 32, 8, 4, Filter1x1Stride1Pad0, 32, 32, 1, 2, 8, 8, 1, 1> does not support this problem
+Best configuration parameters:
+name: DeviceGroupedConvBwdDataMultipleD_Xdl_CShuffle_v1<128, 32, 16, 32, 8, 4, Default, 16, 16, 1, 1, 8, 2, 1, 1>
+avg_time: 0
+tflops: inf
+GB/s: inf
+/root/workspace/ck3/test/grouped_convnd_bwd_data/test_grouped_convnd_bwd_data.cpp:45: Failure
+Value of: pass
+  Actual: false
+Expected: true
+
+[  FAILED  ] TestGroupedConvndBwdData2d/0.Test2D, where TypeParam = std::tuple<float,ck::tensor_layout::convolution::NHWGK,ck::tensor_layout::convolution::GKYXC,ck::tensor_layout::convolution::NHWGC> (953 ms)
+[----------] 1 test from TestGroupedConvndBwdData2d/0 (953 ms total)
+
+[----------] 1 test from TestGroupedConvndBwdData3d/0, where TypeParam = std::tuple<float,ck::tensor_layout::convolution::NDHWGK,ck::tensor_layout::convolution::GKZYXC,ck::tensor_layout::convolution::NDHWGC>
+[ RUN      ] TestGroupedConvndBwdData3d/0.Test3D
+/root/workspace/ck3/test/grouped_convnd_bwd_data/test_grouped_convnd_bwd_data.cpp:28: Failure
+Value of: conv_params.empty()
+  Actual: true
+Expected: false
+
+[  FAILED  ] TestGroupedConvndBwdData3d/0.Test3D, where TypeParam = std::tuple<float,ck::tensor_layout::convolution::NDHWGK,ck::tensor_layout::convolution::GKZYXC,ck::tensor_layout::convolution::NDHWGC> (0 ms)
+[----------] 1 test from TestGroupedConvndBwdData3d/0 (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 2 test suites ran. (954 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] TestGroupedConvndBwdData2d/0.Test2D, where TypeParam = std::tuple<float,ck::tensor_layout::convolution::NHWGK,ck::tensor_layout::convolution::GKYXC,ck::tensor_layout::convolution::NHWGC>
+[  FAILED  ] TestGroupedConvndBwdData3d/0.Test3D, where TypeParam = std::tuple<float,ck::tensor_layout::convolution::NDHWGK,ck::tensor_layout::convolution::GKZYXC,ck::tensor_layout::convolution::NDHWGC>
+
+ 2 FAILED TESTS
